@@ -1,0 +1,50 @@
+sprite Main {
+    let font-width = 8
+    let font-height = 12
+    let font-scale = 200
+
+    inline fn initialize-terminal {
+        hide()
+        set-size(to: font-scale)
+        clear-terminal()
+    }
+
+    fn clear-terminal {
+        erase-all()
+        go-to(x: -232, y: 172)
+    }
+
+    fn print(_ string: String) {
+        for i length(string) {
+            putchar(string.letter(i))
+        }
+    }
+
+    fn println(_ string: String) {
+        print(string.join("\n"))
+    }
+
+    fn putchar(_ char: String) {
+        if char == "\n" {
+            new-line()
+        } else {
+            set-costume(to: "[unknown]")
+            set-costume(to: char)
+            stamp()
+            advance-cursor()
+        }
+    }
+
+    inline fn advance-cursor {
+        # if x-pos() < 228 {
+        change-x(by: font-width)
+        # } else {
+        #     new-line()
+        # }
+    }
+
+    fn new-line {
+        set-x(to: -232)
+        change-y(by: -1 * font-height)
+    }
+}

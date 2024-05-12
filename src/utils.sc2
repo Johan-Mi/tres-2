@@ -1,0 +1,7 @@
+inline fn change(_ comptime var: Var[Num], by amount: Num) {
+    var = get(var) + amount
+}
+
+inline fn change(_ comptime list: List[Num], index index: Num, by amount: Num) {
+    list.replace(index: index, with: list.at(index) + amount)
+}

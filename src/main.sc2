@@ -1,0 +1,34 @@
+import "error-handling.sc2"
+import "font.sc2"
+import "heap.sc2"
+import "terminal.sc2"
+import "utils.sc2"
+
+sprite Stage {
+    costumes {
+        "backdrop": "assets/backdrop.png",
+    }
+}
+
+sprite Main {
+    fn when-flag-clicked {
+        initialize-terminal()
+        initialize-heap()
+
+        let p = heap-allocate(size: 4)
+        heap-deallocate(p)
+        heap-allocate(size: 3)
+        heap-allocate(size: 5)
+
+        let a = 0
+        let b = 1
+        repeat 20 {
+            println(a.to-string())
+            let c = a
+            &a = b
+            &b = b + c
+        }
+
+        detect-memory-leaks()
+    }
+}

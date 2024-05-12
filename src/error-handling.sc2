@@ -1,0 +1,6 @@
+sprite Main {
+    fn panic(_ message: String) {
+        println("Panic! ".join(message))
+        stop-all()
+    }
+}

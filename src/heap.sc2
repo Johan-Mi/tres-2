@@ -1,0 +1,96 @@
+sprite Main {
+    let heap = [] as List[String]
+    let heap-refcounts = [] as List[Num]
+
+    inline fn initialize-heap {
+        heap.delete-all()
+        heap-refcounts.delete-all()
+    }
+
+    inline fn read(_ ptr: Num) -> String {
+        heap.at(ptr)
+    }
+
+    inline fn write(_ value: String, to ptr: Num) {
+        heap.replace(index: ptr, with: value)
+    }
+
+    inline fn write(_ value: Num, to ptr: Num) {
+        write(value.to-string(), to: ptr)
+    }
+
+    fn heap-allocate(size size: Num) -> Num {
+        let current-block-size = 0
+        for i length(heap) {
+            if heap-refcounts.at(i) == 0 {
+                change(&current-block-size, by: 1)
+                if current-block-size > size {
+                    let ptr = i - size
+                    heap-refcounts.replace(index: ptr, with: 1)
+                    write(size, to: ptr)
+                    for j size {
+                        heap-refcounts.replace(index: ptr + j, with: 1 / 0)
+                    }
+                    return ptr
+                }
+            } else {
+                &current-block-size = 0
+            }
+        }
+
+        heap.push(size.to-string())
+        heap-refcounts.push(1)
+        let ptr = length(heap)
+        repeat size {
+            heap.push("")
+            heap-refcounts.push(1 / 0)
+        }
+        ptr
+    }
+
+    fn heap-deallocate(_ ptr: Num) {
+        heap-refcounts.change(index: ptr, by: -1)
+        if heap-refcounts.at(ptr) == 0 {
+            for i read(ptr).to-num() {
+                write("", to: ptr + i)
+                heap-refcounts.replace(index: ptr + i, with: 0)
+            }
+            write("", to: ptr)
+        }
+    }
+
+    inline fn copy-one(from source: Num, to destination: Num) {
+        write(read(source), to: destination)
+    }
+
+    fn heap-reallocate(_ old-ptr: Num, to-size new-size: Num) -> Num {
+        let new-ptr = heap-allocate(size: new-size)
+        for i read(old-ptr).to-num() {
+            copy-one(from: old-ptr + i, to: new-ptr + i)
+        }
+        heap-deallocate(old-ptr)
+        new-ptr
+    }
+
+    inline fn detect-memory-leaks {
+        let leaked-blocks = 0
+        let leaked-elements = 0
+        for i length(heap) {
+            if not(heap-refcounts.at(i) == 0) {
+                if not(heap-refcounts.at(i) == 1 / 0) {
+                    change(&leaked-blocks, by: 1)
+                    change(&leaked-elements, by: read(i).to-num())
+                }
+            }
+        }
+        if not(leaked-blocks == 0) {
+            panic(
+                "memory leak: leaked "
+                .join(leaked-blocks.to-string())
+                .join(" blocks, ")
+                .join(leaked-elements.to-string())
+                .join(" elements")
+            )
+        }
+    }
+}
