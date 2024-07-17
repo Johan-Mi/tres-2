@@ -36,11 +36,11 @@ sprite Main {
     }
 
     inline fn advance-cursor {
-        # if x-pos() < 228 {
-        change-x(by: font-width)
-        # } else {
-        #     new-line()
-        # }
+        if x-pos() < 228 {
+            change-x(by: font-width)
+        } else {
+            new-line()
+        }
     }
 
     fn new-line {
